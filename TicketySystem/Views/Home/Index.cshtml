@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    string userRole = Session["userRole"].ToString();
+}
+@model TicketySystem.Models.User
+<main>
+    <fieldset>
+        <legend>User Dashboard</legend>
+
+        @if (Session["userRole"] != null)
+        {
+            <text>Welcome @Session["userRole"].ToString()</text>
+        }
+    </fieldset>
+</main>

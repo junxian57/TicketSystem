@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+<form class="form-horizontal" method="post" action="/Home/Login">
+    <!-- Email input -->
+    @Html.AntiForgeryToken()
+    <div class="form-outline mb-4">
+        <input type="text" id="form2Example1" name="username" class="form-control" />
+        <label class="form-label" for="form2Example1">User Name</label>
+    </div>
+
+    <!-- Password input -->
+    <div class="form-outline mb-4">
+        <input type="password" id="form2Example2" name="Password" class="form-control" />
+        <label class="form-label" for="form2Example2">Password</label>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+</form>
+
+

@@ -1,0 +1,138 @@
+﻿@model IEnumerable<TicketySystem.Models.Ticket>
+@using TicketySystem.Models
+@{
+    ViewBag.Title = "Index";
+    string userRole = Session["userRole"].ToString();
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <strong>Success !</strong>   @TempData["SuccessMessage"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+}
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New Ticket", "Create", null, new { @class = "btn btn-primary" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Summary)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsResolved)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ticketType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Priority)
+        </th>
+        <th>Action</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Summary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsResolved)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ticketType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Priority)
+            </td>
+            <td>
+
+                @if (userRole == "Administrator")
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
+                    <span>&nbsp;</span>
+                    @Html.ActionLink("Resloved", "ReslovedTicket", new { id = item.Id, resolved = item.IsResolved }, new { @class = "btn btn-success" })
+                    <span>&nbsp;</span>
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-success" })
+                    <span>&nbsp;</span>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                }
+
+                @if (item.ticketType == Ticket.TicketType.TestCase)
+                {
+                    if (userRole == "QA")
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
+                        <span>&nbsp;</span>
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-success" })
+                        <span>&nbsp;</span>
+                        @Html.ActionLink("Resloved", "ReslovedTicket", new { id = item.Id, resolved = item.IsResolved }, new { @class = "btn btn-success" })
+                        <span>&nbsp;</span>
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+
+                    }
+                    else if (userRole == "RD" || userRole == "PM")
+                    {
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-success" })
+                    }
+                }
+                else if (item.ticketType == Ticket.TicketType.FeatureRequest)
+                {
+                    if (userRole == "QA")
+                    {
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-success" })
+                    }
+                    else if (userRole == "RD")
+                    {
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-success" })
+                        <span>&nbsp;</span>
+                        @Html.ActionLink("Resloved", "ReslovedTicket", new { id = item.Id, resolved = item.IsResolved }, new { @class = "btn btn-success" })
+                    }
+                    else if (userRole == "PM")
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
+                        <span>&nbsp;</span>
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-success" })
+                        <span>&nbsp;</span>
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                    }
+                }
+                else if (item.ticketType == Ticket.TicketType.Bug)
+                {
+                    if (userRole == "QA")
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
+                        <span>&nbsp;</span>
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-success" })
+                        <span>&nbsp;</span>
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+
+                    }
+                    else if (userRole == "RD")
+                    {
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-success" })
+                        <span>&nbsp;</span>
+                        @Html.ActionLink("Resloved", "ReslovedTicket", new { id = item.Id, resolved = item.IsResolved }, new { @class = "btn btn-success" })
+                    }
+                    else if (userRole == "PM")
+                    {
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-success" })
+                    }
+                }
+            </td>
+        </tr>
+    }
+
+</table>

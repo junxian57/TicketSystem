@@ -1,0 +1,91 @@
+﻿@model TicketySystem.Models.Ticket
+@using TicketySystem.Models
+@{
+    ViewBag.Title = "Create";
+    string userRole = Session["userRole"].ToString();
+    string userGuid = Session["userGuid"].ToString();
+}
+<h2>Create</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Ticket</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Summary, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Summary, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Summary, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="SelectedOption">Ticket Type:</label>
+            @if (userRole == "QA")
+            {
+                @Html.DropDownListFor(model => model.ticketType, Enum.GetValues(typeof(Ticket.TicketType))
+                    .Cast<Ticket.TicketType>()
+                    .Where(t => t != Ticket.TicketType.FeatureRequest)
+                    .Select(t => new SelectListItem
+                    {
+                        Text = t.GetDisplayName(), // You may need to implement a GetDisplayName extension method
+                        Value = ((int)t).ToString()
+                    }),
+                    "Select Ticket Type",
+                    new { @class = "form-control", id = "SelectedOption" } // Add id to the select element
+                )
+            }
+            else if (userRole == "PM")
+            {
+                @Html.DropDownListFor(model => model.ticketType, Enum.GetValues(typeof(Ticket.TicketType))
+                  .Cast<Ticket.TicketType>()
+                  .Where(t => t != Ticket.TicketType.TestCase)
+                  .Select(t => new SelectListItem
+                  {
+                      Text = t.GetDisplayName(), // You may need to implement a GetDisplayName extension method
+                      Value = ((int)t).ToString()
+                  }),
+                  "Select Ticket Type",
+                  new { @class = "form-control", id = "SelectedOption" } // Add id to the select element
+              )
+            }
+
+
+            else
+            {
+                @Html.EnumDropDownListFor(model => model.ticketType, "Select Ticket Type", new { @class = "form-control", id = "SelectedOption" })// Add id to the select element
+            }
+        </div>
+
+        <div class="form-group">
+            <label for="SelectedOption">Priority Type:</label>
+            @Html.EnumDropDownListFor(model => model.Priority, "Select Priority", new { @class = "form-control", id = "SelectedOption" })
+        </div>
+        &nbsp;
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
